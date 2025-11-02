@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>温馨提醒</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 10px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #5a67d8;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            color: #4a5568;
+            max-width: 500px;
+            margin: 0 auto 20px;
+            line-height: 1.5;
+        }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .tip-window {
+            position: absolute;
+            width: 250px;
+            min-height: 80px;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.5s ease-out;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        
+        .tip-window:hover {
+            transform: scale(1.05);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.8); }
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #718096;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 480px) {
+            .tip-window {
+                width: 200px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>温馨提醒</h1>
+        <p class="description">温馨小提示会自动出现，点击弹窗即可关闭～</p>
+    </div>
+    
+    <div class="container" id="container"></div>
+    
+    <div class="footer">
+        <p>愿每一天都充满温暖与正能量！</p>
+    </div>
+
+    <script>
+        // 温馨提醒内容
+        const tips = [
+            '多喝水哦~', '保持微笑呀', '每天都要元气满满',
+            '记得吃水果', '保持好心情', '好好爱自己', '我想你了',
+            '梦想成真', '期待下一次见面', '金榜题名',
+            '顺顺利利', '早点休息', '愿所有烦恼都消失',
+            '别熬夜', '今天过得开心嘛', '天冷了，多穿衣服'
+        ];
+        
+        // 背景颜色选项
+        const bgColors = [
+            'lightpink', 'skyblue', 'lightgreen', 'lavender',
+            'lightyellow', 'plum', 'coral', 'bisque', 'aquamarine',
+            'mistyrose', 'honeydew', 'lavenderblush', 'oldlace'
+        ];
+        
+        const container = document.getElementById('container');
+
+        // 创建提醒窗口
+        function createTip() {
+            const tipText = tips[Math.floor(Math.random() * tips.length)];
+            const bgColor = bgColors[Math.floor(Math.random() * bgColors.length)];
+            
+            const tipWindow = document.createElement('div');
+            tipWindow.className = 'tip-window';
+            tipWindow.textContent = tipText;
+            tipWindow.style.backgroundColor = bgColor;
+            
+            const containerRect = container.getBoundingClientRect();
+            const maxX = containerRect.width - 250;
+            const maxY = containerRect.height - 80;
+            
+            const x = Math.floor(Math.random() * (maxX > 0 ? maxX : 0));
+            const y = Math.floor(Math.random() * (maxY > 0 ? maxY : 0));
+            
+            tipWindow.style.left = `${x}px`;
+            tipWindow.style.top = `${y}px`;
+            
+            // 点击关闭
+            tipWindow.addEventListener('click', function() {
+                tipWindow.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => {
+                    if (tipWindow.parentNode) {
+                        container.removeChild(tipWindow);
+                    }
+                }, 300);
+            });
+            
+            container.appendChild(tipWindow);
+        }
+
+        // 页面加载后自动添加初始提醒
+        window.addEventListener('load', function() {
+            // 初始快速弹出 3 个
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => createTip(), i * 300);
+            }
+
+            // 每 0.5~1 秒自动添加一个新提醒（500~1000ms）
+            setInterval(() => {
+                createTip();
+            }, 500 + Math.random() * 500); // 500ms ~ 1000ms
+        });
+    </script>
+</body>
+</html>
